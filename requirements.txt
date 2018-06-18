@@ -1,0 +1,5 @@
+numpy==1.14.3
+seaborn==0.8.1
+dotmap==1.2.20
+matplotlib==2.2.2
+modelbase==0.2.1
