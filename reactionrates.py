@@ -56,9 +56,9 @@ class Reactions:
         return 4e-3 / self.Hstroma(p)
 
     def pH(self,hlf):
-        if hlf<=0:
-            warnings.warn("H became negative {} and was set to 1e-30".format(hlf))
-            hlf=1e-30       
+        #if hlf<=0:
+        #    warnings.warn("H became negative {} and was set to 1e-30".format(hlf))
+        #   hlf=1e-30       
         return (-math.log(hlf*2.5e-4)/math.log(10))
 
     def pHinv(self,pH):
@@ -161,13 +161,16 @@ class Reactions:
         :return: light intensity at certain point of time. 
         Typical PAM light function
         '''
-        if kwargs["t"]%p.dT <=0.8:
-            return 5000
-        elif ((kwargs["t"] > p.Ton) and (kwargs["t"] < p.Toff) and \
-              (kwargs["t"]%p.dT>0.8)):
+        if p.continuous == True:
             return p.PFD
         else:
-            return 0.0000001
+            if kwargs["t"]%p.dT <=0.8:
+                return 5000
+            elif ((kwargs["t"] > p.Ton) and (kwargs["t"] < p.Toff) and \
+                  (kwargs["t"]%p.dT>0.8)):
+                return p.PFD
+            else:
+                return 0.0000001
 
 
 #    def light(self, p, **kwargs):
