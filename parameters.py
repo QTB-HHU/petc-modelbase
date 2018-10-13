@@ -107,6 +107,7 @@ class Parameters(DotMap):
         self.T = 298. # Temperature in K - for now assumed to be constant at 25 C
 
         # light
+        self.continuous = 0
         self.PFD = 0.
         self.Ton = 360
         self.Toff = 1800

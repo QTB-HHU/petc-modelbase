@@ -40,7 +40,7 @@ def pamsimulation(s, y0, Tmax, Ton, Toff, photon=100, dT=120, Tflash=0.8):
     t = 0
     y = y0
     
-    s.model.par.update({'Ton':Ton, 'Toff': Toff, 'dT':dT, 'PFD':100})
+    s.model.par.update({'continuous':False, 'Ton':Ton, 'Toff': Toff, 'dT':dT, 'PFD':photon})
     
     s.set_initial_value(y0, t0=0)
     try:
@@ -53,19 +53,18 @@ def pamsimulation(s, y0, Tmax, Ton, Toff, photon=100, dT=120, Tflash=0.8):
 
     while s.successful() and t < Tmax:             
         #turn on the saturating pulse of light of Tflash length
-        if t%dT == 0:
-            #s.model.par.update({'PFD': 5000})
+        if t%s.model.par.dT == 0:
             tfl = np.linspace(t, t+Tflash, 100)
             s.timeCourse(tfl, y)
         else:
             #switch on the light except for the dark period
             #t+dT-Tflash is the time to the next flash
-            if t<= Ton or t>=Toff:
-                tIfl = np.linspace(t, t+dT-Tflash, 10000)
+            if t<= s.model.par.Ton or t>=s.model.par.Toff:
+                tIfl = np.linspace(t, t+s.model.par.dT-Tflash, 10000)
                 s.timeCourse(tIfl, y)
             else:
                 #put the actinic light
-                tIfl = np.linspace(t, t+dT-Tflash, 1000)
+                tIfl = np.linspace(t, t+s.model.par.dT-Tflash, 1000)
                 s.timeCourse(tIfl, y)
         t = s.getT()[-1]
         y = s.getVarsByName(s.model.cpdNames)[-1]
