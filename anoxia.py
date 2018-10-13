@@ -44,7 +44,7 @@ def anoxia(s, y0, Tmax=3600, Tflash=0.8):
     t = 0
     y = y0
 
-    s.model.par.update({'PFD': 0, 'ox':False})
+    s.model.par.update({'continuous':False, 'PFD': 0, 'ox':False})
     try:
         '''only executed if assimulo is used'''
         s.integrator.atol = 1.e-8
@@ -87,15 +87,16 @@ if __name__=='__main__':
             "LHC":0.9,
             'Fluo':0,
             'Light':p.PFD}
-        
+    
     y0 = np.array(list(init.values()))   
-       
+    
     s, m = anoxia(s, y0)
 
+    # Plot the results
     plt.figure()
     fl = s.getRate('fluorescence')
     plt.plot(s.getT(), fl/max(fl))
     plt.xlabel('Time [s]')
     plt.ylabel('Fluorescence ~PSII [normalized]')
-
+    
     plt.show()
